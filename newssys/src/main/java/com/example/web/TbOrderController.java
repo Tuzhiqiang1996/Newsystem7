@@ -1,0 +1,140 @@
+package com.example.web;
+
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.example.common.Page.PageList;
+import com.example.common.lang.Result;
+import com.example.entity.TbDeviceListRe705;
+import com.example.entity.TbOrder;
+import com.example.mapper.TbOrderMapper;
+import com.example.service.TbOrderService;
+import com.github.pagehelper.IPage;
+import lombok.Data;
+import org.apache.commons.collections.OrderedMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.awt.print.Book;
+import java.util.List;
+
+/**
+ * <p>
+ * 前端控制器
+ * </p>
+ *
+ * @author Tu
+ * @since 2021-05-07
+ */
+@Data
+@RestController
+@RequestMapping("/")
+public class TbOrderController {
+    @Autowired
+    TbOrderService orderService;
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+    @Resource
+    private TbOrderMapper tbOrderMapper;
+
+    @GetMapping("/order")
+    public Result order(Integer currentPage) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
+        }
+        Integer pagerow = 8;
+        PageList pageList = new PageList();
+        List<TbOrder> data = orderService.findAllbyPage(currentPage, pagerow);
+        int TotalRows = orderService.countAll();
+        pageList.setPage(currentPage);
+        pageList.setSize(pagerow);
+        pageList.setTotal(TotalRows);
+        int pages = 0;
+        if (TotalRows % pagerow == 0) {
+            pages = TotalRows / pagerow;
+        } else {
+            pages = TotalRows / pagerow + 1;
+        }
+        pageList.setPages(pages);
+
+        pageList.setRecords(data);
+        return Result.succ("成功", pageList);
+    }
+
+    @PostMapping("/orderadd")
+    public Result orderadd(@RequestBody TbOrder orderList) {
+
+        TbOrder ord = new TbOrder();
+
+        BeanUtil.copyProperties(orderList, ord);
+        orderService.insertOrUpdate(orderList);
+//        System.out.println(orderList);
+        return Result.succ("新增成功！");
+    }
+
+    @PostMapping("/editorder")
+    public Result editorder(@RequestBody TbOrder orderList) {
+        TbOrder ord = new TbOrder();
+
+        BeanUtil.copyProperties(orderList, ord);
+        orderService.insertOrUpdate(orderList);
+        return Result.succ("操作成功！");
+    }
+
+    @GetMapping("/deleteorder")
+    public Result deleteord(@RequestParam Integer id, @RequestParam Integer status) {
+        if (status != 0) {
+            return Result.fail("没有权限");
+        }
+
+
+        orderService.deleteById(id);
+
+        return Result.succ("删除成功！");
+    }
+
+    /**
+     * [java.lang.String]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/5/11 10:45
+     * @message 查询类似的
+     * https://www.cnblogs.com/jayhou/p/9824127.html
+     * 通过tbOrderMapper、selectPage 来查询 分页还是要自己封装
+     * 这里只是查询到 数据的全部
+     */
+    @GetMapping("getlistnumber")
+    public Result getlistnumber(String orderNumber) {
+
+        EntityWrapper<TbOrder>  entityWrapper = new EntityWrapper();
+        entityWrapper.like("order_number", orderNumber);
+        List<TbOrder> userList = tbOrderMapper.selectPage(new Page<TbOrder>(1,1), entityWrapper);
+        //判断数据是否为空
+        if (userList == null || userList.size() == 0) {
+            return Result.fail("没有数据！");
+        }
+        return Result.succ("查询成功！", userList);
+    }
+    @PostMapping("/saveorderfile")
+    public Result saveorder(@RequestBody TbOrder setfile) {
+        TbOrder s = new TbOrder();
+        BeanUtil.copyProperties(setfile, s);
+        orderService.insertOrUpdate(s);
+        return Result.succ("插入数据成功！", s);
+    }
+    /**
+     * [java.lang.Integer]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/5/10 19:14
+     * @message EntityWrapper  jdk1.7
+     * qQueryWrapper 1.8
+     */
+
+}
+
