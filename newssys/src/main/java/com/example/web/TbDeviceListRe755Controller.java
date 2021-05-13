@@ -65,15 +65,15 @@ public class TbDeviceListRe755Controller {
     }
 
     @GetMapping("/searchTYlist")
-    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime) {
+    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
 
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 100;
         PageList pageList = new PageList();
-        List<TbDeviceListRe755> data = re755Service.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime);
-        List<TbDeviceListRe755> datasize = re755Service.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime);
+        List<TbDeviceListRe755> data = re755Service.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+        List<TbDeviceListRe755> datasize = re755Service.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
 
         int TotalRows = datasize.size();
         pageList.setPage(currentPage);
@@ -151,7 +151,7 @@ public class TbDeviceListRe755Controller {
      * @return com.example.common.lang.Result
      * @author Tu
      * @date 2021/5/11 14:49
-     * @message  功能同上
+     * @message 功能同上
      */
     @GetMapping("/tytatistical")
     public Result statisticalNum(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {

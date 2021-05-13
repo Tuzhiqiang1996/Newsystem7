@@ -4,7 +4,7 @@
     <!-- <router-link to="/HelloWorld">数据大屏</router-link> -->
     <el-container style="height: 100%">
       <el-aside width="" style="background: #00152a">
-        <div class="title">MU</div>
+        <div class="title">WTWD</div>
         <el-menu
           :default-active="defaultactive"
           class="el-menu-vertical-demo"
@@ -74,6 +74,7 @@
             <span slot="title">工具辅助</span>
           </el-menu-item>
         </el-menu>
+        <div class="botinfo" style="color: #fff">123</div>
       </el-aside>
       <el-container>
         <el-header>
@@ -146,6 +147,7 @@ export default {
       isbtn2: "el-icon-s-unfold",
       defaultactive: "2-1",
       message: "Hello",
+      onLine: navigator.onLine,
     };
   },
   //监听属性 类似于data概念
@@ -196,7 +198,7 @@ export default {
           this.$axios
             .get("/logout", {
               headers: {
-                // Authorization: localStorage.getItem("token"),
+                Authorization: localStorage.getItem("token"),
               },
             })
             .then((res) => {
@@ -223,16 +225,33 @@ export default {
           });
         });
     },
+    updateOnlineStatus(e) {
+      const { type } = e;
+      this.onLine = type === "online";
+      this.$message({
+        type: "error",
+        message: "网络由异常",
+        showClose: true,
+      });
+      console.log(e);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    window.addEventListener("online", this.updateOnlineStatus); // 网络由异常到正常时触发
+
+    window.addEventListener("offline", this.updateOnlineStatus); // 网络由正常常到异常时触发
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
   updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
+  beforeDestroy() {
+    window.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("offline", this.updateOnlineStatus);
+  }, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 };
@@ -350,5 +369,17 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.botinfo {
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 50px;
+  line-height: 50px;
+  display: flex;
+  justify-content: center;
+  width: 200px;
+  display: none;
 }
 </style>

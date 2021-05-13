@@ -2,13 +2,17 @@ package com.example.web;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.example.common.Page.PageList;
 import com.example.common.lang.Result;
 import com.example.entity.TbDeviceListRe705;
 import com.example.mapper.TbDeviceListRe705Mapper;
 import com.example.service.TbDeviceListRe705Service;
 
+import com.github.pagehelper.IPage;
 import lombok.Data;
+import net.sf.saxon.om.Item;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -70,15 +74,15 @@ public class TbDeviceListRe705Controller {
     }
 
     @GetMapping("/searchlist")
-    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime) {
+    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
 
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 100;
         PageList pageList = new PageList();
-        List<TbDeviceListRe705> data = tbDeviceListRe705Service.searchAllbyPage(pagerow, deviceid, currentPage, orderId, starttime, endtime);
-        List<TbDeviceListRe705> datasize = tbDeviceListRe705Service.searchAllbyPagenum(deviceid, currentPage, orderId, starttime, endtime);
+        List<TbDeviceListRe705> data = tbDeviceListRe705Service.searchAllbyPage(pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+        List<TbDeviceListRe705> datasize = tbDeviceListRe705Service.searchAllbyPagenum(deviceid, currentPage, orderId, starttime, endtime, sn);
 
         int TotalRows = datasize.size();
         pageList.setPage(currentPage);
@@ -156,7 +160,7 @@ public class TbDeviceListRe705Controller {
      * @return com.example.common.lang.Result
      * @author Tu
      * @date 2021/5/11 11:40
-     * @message  此方法与上面使用SQL写的方法一样
+     * @message 此方法与上面使用SQL写的方法一样
      */
     @GetMapping("/statistical")
     public Result statisticalNum(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
@@ -210,6 +214,27 @@ public class TbDeviceListRe705Controller {
          */
         tbDeviceListRe705Service.insertBatch(savefileList);
         return Result.succ("插入成功！", savefile);
+    }
+
+    @GetMapping("/getlists")
+    public Result getlists(Integer currentPage) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
+        }
+        Integer rows = 100;
+        List<TbDeviceListRe705> devLists = tbDeviceListRe705Mapper.selectPage(new Page<TbDeviceListRe705>(1, 1000), new EntityWrapper<TbDeviceListRe705>());
+        //传递Page对象 之后可以动态的获取所有的分页数据
+        Page iPage = new Page<>(currentPage, rows);
+        EntityWrapper<TbDeviceListRe705> queryWrapper = new EntityWrapper<TbDeviceListRe705>();
+        //降序排列
+        queryWrapper.orderBy("id", true);
+//        iPage =tbDeviceListRe705Mapper.selectPage(iPage, queryWrapper);
+          iPage = tbDeviceListRe705Service.selectPage(iPage, queryWrapper);
+        //1.获取记录总数
+        int total = iPage.getTotal();
+        List<TbDeviceListRe705> lists=iPage.getRecords();
+        System.out.println(total);
+         return Result.succ("", iPage);
     }
 }
 

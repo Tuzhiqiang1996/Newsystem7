@@ -45,75 +45,93 @@ public class TbDeviceListRe705ServiceImpl extends ServiceImpl<TbDeviceListRe705M
     }
 
     @Override
-    public List<TbDeviceListRe705> searchAllbyPage(Integer pagerow,String deviceid, Integer currentPage, String orderId, String starttime, String endtime) {
+    public List<TbDeviceListRe705> searchAllbyPage(Integer pagerow,String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
 
         int starter = (currentPage - 1) * pagerow;
-        String sql = null;
+        String sql = "select * from tb_device_list_re705 WHERE ";
         String limit = " limit " + starter + " , " + pagerow;
         String devid = " deviceid  LIKE \"%" + deviceid + "%\"";
         String ordid = "order_id  LIKE \"%" + orderId + "%\"";
-        String time = "test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
+        String snuid = " sn  LIKE \"%" + sn + "%\"";
+        String time = " test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
         Date dNow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String endtime1 = ft.format(dNow);
         String starttime1 = ft.format(new Date(dNow.getTime() - 1 * 24 * 60 * 60 * 1000));
         if (deviceid != null && deviceid.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + devid + limit;
+            sql +=devid;
         }
         if (orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + limit;
+            sql += ordid ;
+        }
+        if (sn != null && sn.length() != 0) {
+            sql += snuid ;
         }
         if (starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + time + limit;
+            sql += time ;
         }
+
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + devid + limit;
+            sql += ordid + " and " + devid ;
         }
         if (deviceid != null && deviceid.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + devid + " and " + time + limit;
+            sql += devid + " and " + time ;
         }
         if (orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + time + limit;
+            sql += ordid + " and " + time ;
         }
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + devid + " and " + time + limit;
-
+            sql += ordid + " and " + devid + " and " + time ;
         }
-
+        sql+=limit;
+//        System.out.println(sql);
         List<TbDeviceListRe705> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(TbDeviceListRe705.class));
 
         return list;
     }
 
     @Override
-    public List<TbDeviceListRe705> searchAllbyPagenum(String deviceid, Integer currentPage, String orderId, String starttime, String endtime) {
-        String sql = null;
+    public List<TbDeviceListRe705> searchAllbyPagenum(String deviceid, Integer currentPage, String orderId, String starttime, String endtime,String sn) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
+        }
+
+        String sql = "select * from tb_device_list_re705 WHERE ";
         String devid = " deviceid  LIKE \"%" + deviceid + "%\"";
         String ordid = "order_id  LIKE \"%" + orderId + "%\"";
-        String time = "test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
+        String snuid = " sn  LIKE \"%" + sn + "%\"";
+        String time = " test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String endtime1 = ft.format(dNow);
+        String starttime1 = ft.format(new Date(dNow.getTime() - 1 * 24 * 60 * 60 * 1000));
         if (deviceid != null && deviceid.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + devid;
+            sql +=devid;
         }
         if (orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid;
+            sql += ordid ;
+        }
+        if (sn != null && sn.length() != 0) {
+            sql += snuid ;
         }
         if (starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + time;
+            sql += time ;
         }
+
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + devid;
-        }
-        if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + devid + " and " + time;
+            sql += ordid + " and " + devid ;
         }
         if (deviceid != null && deviceid.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + devid + " and " + time;
+            sql += devid + " and " + time ;
         }
         if (orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_re705 WHERE " + ordid + " and " + time;
+            sql += ordid + " and " + time ;
+        }
+        if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
+            sql += ordid + " and " + devid + " and " + time ;
         }
         List<TbDeviceListRe705> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(TbDeviceListRe705.class));
 

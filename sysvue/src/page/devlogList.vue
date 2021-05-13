@@ -215,6 +215,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },

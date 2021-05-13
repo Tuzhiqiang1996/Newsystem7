@@ -60,37 +60,45 @@ public class TbDeviceListXiaojiangServiceImpl extends ServiceImpl<TbDeviceListXi
         }
 
         int starter = (currentPage - 1) * pagerow;
-        String sql = null;
+        String sql = "select * from tb_device_list_xiaojiang WHERE ";
         String limit = " limit " + starter + " , " + pagerow;
         String devid = " deviceid  LIKE \"%" + deviceid + "%\"";
         String ordid = "order_id  LIKE \"%" + orderId + "%\"";
         String snnum = "sn  LIKE \"%" + sn + "%\"";
         String time = "test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
         if (deviceid != null && deviceid.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + limit;
+            sql+=devid;
         }
         if (orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + limit;
+            sql+=ordid;
         }
         if (sn != null && sn.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + snnum + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + snnum + limit;
+            sql+=snnum;
         }
         if (starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + time + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + time + limit;
+            sql+=time;
         }
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + limit;
+            sql+=ordid + " and " + devid;
         }
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + " and " + time + limit;
-
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + " and " + time + limit;
+            sql+=ordid + " and " + devid + " and " + time;
         }
         if (deviceid != null && deviceid.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + " and " + time + limit;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + " and " + time + limit;
+            sql+=devid + " and " + time;
         }
         if (orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
             sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + time + limit;
+            sql+=ordid + " and " + time;
         }
+        sql+=limit;
         List<TbDeviceListXiaojiang> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(TbDeviceListXiaojiang.class));
 
         return list;
@@ -99,35 +107,41 @@ public class TbDeviceListXiaojiangServiceImpl extends ServiceImpl<TbDeviceListXi
     @Override
     public List<TbDeviceListXiaojiang> searchAllbyPagenum(Integer currentPage, Integer pagerow, String deviceid, Integer currentPage1, String orderId, String starttime, String endtime, String sn) {
 
-        String sql = null;
+        String sql = "select * from tb_device_list_xiaojiang WHERE  ";
         String devid = " deviceid  LIKE \"%" + deviceid + "%\"";
         String ordid = "order_id  LIKE \"%" + orderId + "%\"";
         String snnum = "sn  LIKE \"%" + sn + "%\"";
         String time = "test_datetime BETWEEN \"" + starttime + "\" and  \"" + endtime + "\"";
         if (deviceid != null && deviceid.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + devid;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + devid;
+            sql+=devid;
         }
         if (orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid;
+            sql+=ordid;
         }
         if (sn != null && sn.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + snnum;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + snnum;
+            sql+=snnum;
         }
         if (starttime != null && starttime.length() != 0) {
             sql = "select * from tb_device_list_xiaojiang WHERE " + time;
         }
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid;
+            sql+=ordid + " and " + devid;
         }
         if (deviceid != null && deviceid.length() != 0 && orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + " and " + time;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + devid + " and " + time;
+            sql+= ordid + " and " + devid + " and " + time;
         }
         if (deviceid != null && deviceid.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + " and " + time;
-
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + devid + " and " + time;
+            sql+= devid + " and " + time;
         }
         if (orderId != null && orderId.length() != 0 && starttime != null && starttime.length() != 0) {
-            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + time;
+//            sql = "select * from tb_device_list_xiaojiang WHERE " + ordid + " and " + time;
+            sql+= ordid + " and " + time;
         }
         List<TbDeviceListXiaojiang> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(TbDeviceListXiaojiang.class));
 

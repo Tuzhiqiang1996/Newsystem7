@@ -47,8 +47,8 @@ public class AccountRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         JwtToken jwtToken = (JwtToken) token;
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
-//        MUser user = mUserService.getById(Long.valueOf(userId));
-        MUser user = null;
+        MUser user = mUserService.selectById(Long.valueOf(userId));
+//        MUser user = null;
         if (user == null) {
             throw new UnknownAccountException("账户不存在");
 

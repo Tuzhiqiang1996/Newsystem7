@@ -285,6 +285,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },
@@ -353,7 +358,7 @@ export default {
       this.$axios
         .post(url, params, {
           headers: {
-            // Authorization: localStorage.getItem("token"),
+            Authorization: localStorage.getItem("token"),
             "Content-Type": "application/json;charset=utf-8",
           },
         })
@@ -375,6 +380,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },
@@ -414,6 +424,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },
@@ -440,6 +455,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },

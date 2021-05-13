@@ -75,8 +75,8 @@ export default {
     return {
       plainOptions,
       plainOptions1,
-      value1: 2,
-      value2: 8,
+      value1: 16,
+      value2: 10,
       num1: "",
       num2: "",
       c2: 0,

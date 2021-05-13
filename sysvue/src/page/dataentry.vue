@@ -381,7 +381,7 @@ export default {
       //   this.arraylist(this.datadevlist);
       // };
     },
-    //格式化数组  单列
+    //选择 单列
     arraylist(e) {
       if (this.activeName == 3) {
         this.morearrylists();
@@ -714,6 +714,11 @@ export default {
             type: "success",
           });
         } else {
+           this.$message({
+              message: "error",
+              showClose: true,
+              type: "error",
+            });
           console.log("error submit!!");
           return false;
         }

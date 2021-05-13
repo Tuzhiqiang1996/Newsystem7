@@ -2,6 +2,9 @@
 <template>
   <div class="login-container">
     <div class="layer">
+      <div class=" ">
+        <img src="../assets/image/logo.png" alt="logo" class="logo" />
+      </div>
       <div class="some-space">
         <div class="form">
           <div class="imgbox" v-if="!log">
@@ -65,6 +68,7 @@
               :plain="true"
               class="loginBtn"
               @click="login('ruleForm')"
+              @keyup.enter.native="login('ruleForm')"
               v-if="log"
               :loading="islogin"
             >
@@ -150,6 +154,17 @@ export default {
   },
   created() {
     // console.log(Image);
+    	var _self = this;
+	document.onkeydown = function(e){
+		if(window.event == undefined){
+			var key = e.keyCode;
+		}else{
+			var key = window.event.keyCode;
+		}
+		if(key == 13){
+			_self.login('ruleForm');
+		}
+	}
   },
   mounted() {},
   watch: {
@@ -417,5 +432,12 @@ input:-ms-input-placeholder {
 }
 .permissions {
   margin-top: 20px;
+}
+.logo {
+  margin: 50px 0 0 80px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(255 ,255, 255 , 0.5);
+  border-radius: 5px;
 }
 </style>

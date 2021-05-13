@@ -20,7 +20,7 @@ public interface TbDeviceListRe705Service extends IService<TbDeviceListRe705> {
 
     int countAll();
 
-    List<TbDeviceListRe705> searchAllbyPage(Integer pagerow,String deviceid, Integer currentPage, String orderId, String starttime, String endtime);
+    List<TbDeviceListRe705> searchAllbyPage(Integer pagerow,String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn);
 
-    List<TbDeviceListRe705> searchAllbyPagenum(String deviceid, Integer currentPage, String orderId, String starttime, String endtime);
+    List<TbDeviceListRe705> searchAllbyPagenum(String deviceid, Integer currentPage, String orderId, String starttime, String endtime,String sn);
 }

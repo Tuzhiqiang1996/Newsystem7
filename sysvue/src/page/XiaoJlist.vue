@@ -9,7 +9,7 @@
           ref="formInline"
           class="demo-form-inline"
         >
-          <el-form-item label="sn序列号" prop="sn">
+          <el-form-item label="序列号" prop="sn">
             <el-input v-model="formInline.sn" placeholder="sn序列号"></el-input>
           </el-form-item>
           <el-form-item label="订单id" prop="orderId">
@@ -465,6 +465,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },
@@ -497,7 +502,11 @@ export default {
           }
         })
         .catch((err) => {
-          console.error(err);
+          this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
         });
     },
     onSubmit() {

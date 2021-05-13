@@ -139,9 +139,9 @@ export default {
       let list = this.list;
       let str = "";
       for (const key in list) {
-        str += `${list[key] + "\t\n"}`;
+        str += `${list[key] + "\n"}`;
       }
-      // console.log("e", str);
+      console.log("e", str);
       this.strdata = str;
       this.files(str);
     },

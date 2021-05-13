@@ -9,6 +9,9 @@
           ref="formInline"
           class="demo-form-inline"
         >
+        <el-form-item label="序列号" prop="sn">
+            <el-input v-model="formInline.sn" placeholder="sn序列号"></el-input>
+          </el-form-item>
           <el-form-item label="订单id" prop="orderId">
             <el-input
               v-model="formInline.orderId"
@@ -233,6 +236,7 @@ export default {
         deviceid: "",
         orderId: "",
         valuetime: "",
+        sn: "",
       },
       pickerOptions: {
         shortcuts: [
@@ -303,10 +307,11 @@ export default {
         this.formInline.deviceid
       }&currentPage=${num}&orderId=${this.formInline.orderId}&starttime=${
         time1 || ""
-      }&endtime=${time2 || ""}`;
+      }&endtime=${time2 || ""}&sn=${this.formInline.sn}`;
       let urls =
         (this.formInline.deviceid == "" &&
           this.formInline.orderId == "" &&
+          this.formInline.sn == "" &&
           time1 == "") ||
         time1 == undefined
           ? url
@@ -337,6 +342,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },
@@ -369,6 +379,11 @@ export default {
           }
         })
         .catch((err) => {
+           this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
           console.error(err);
         });
     },

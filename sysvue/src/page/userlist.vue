@@ -429,7 +429,7 @@ export default {
         this.$axios
           .post("/user/edit", JSON.stringify(this.formData), {
             headers: {
-              // Authorization: localStorage.getItem("token"),
+              Authorization: localStorage.getItem("token"),
               "Content-Type": "application/json;charset=utf-8",
             },
           })
@@ -456,6 +456,11 @@ export default {
             }
           })
           .catch((err) => {
+             this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
             console.error(err);
           });
       } else {
@@ -548,6 +553,11 @@ export default {
               console.log(res);
             })
             .catch((err) => {
+               this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
               console.error(err);
             });
         } else {
@@ -596,6 +606,11 @@ export default {
             }
           })
           .catch((err) => {
+             this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
             console.error(err);
           });
       }
