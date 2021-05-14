@@ -12,8 +12,8 @@ const routes = [
     path: "/home",
     name: "home",
     component: () => import(/* webpackChunkName: "home" */ "@/page/index.vue"),
-    meta:{
-      requireAuth:true
+    meta: {
+      requireAuth: true
     }
   },
   {
@@ -41,7 +41,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     // 判断该路由是否需要登录权限
 
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("token") && sessionStorage.getItem("userInfo")) {
       // 通过vuex state获取当前的token/name是否存在
       next();
     } else {

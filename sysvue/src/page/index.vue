@@ -3,15 +3,22 @@
   <div class="box">
     <!-- <router-link to="/HelloWorld">数据大屏</router-link> -->
     <el-container style="height: 100%">
-      <el-aside width="" style="background: #00152a">
-        <div class="title">WTWD</div>
+      <el-aside width="" style="background: #304156">
+        <div v-if="isCollapse" class="title">
+          <img src="../assets/logo.jpg" alt="" class="img" >
+        </div>
+        <div v-else class="title">
+           <img src="../assets/logo.jpg" alt="" class="img"  >
+          <h1 >WTWD</h1>
+        </div>
+          <!-- background-color="#00152a" -->
         <el-menu
           :default-active="defaultactive"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
           :collapse="isCollapse"
-          background-color="#00152a"
+          background-color="#1f2d3d"
           text-color="#fff"
           @select="select"
         >
@@ -74,7 +81,7 @@
             <span slot="title">工具辅助</span>
           </el-menu-item>
         </el-menu>
-        <div class="botinfo" style="color: #fff">123</div>
+        <div class="botinfo">123</div>
       </el-aside>
       <el-container>
         <el-header>
@@ -85,6 +92,11 @@
               class="btns"
             ></el-button>
             <div class="rightimg">
+              <el-button
+                icon="el-icon-rank"
+                @click="click"
+                class="btns"
+              ></el-button>
               <P
                 >欢迎：<i
                   class="el-icon-user-solid"
@@ -118,9 +130,10 @@
           </div>
         </el-header>
         <el-main>
-          <div class="pagecontent">
-            <Pagehome :defaultactive="defaultactive" />
-          </div>
+          <transition name="el-fade-in" mode="out-in">
+            <div class="pagecontent">
+              <Pagehome :defaultactive="defaultactive" /></div
+          ></transition>
         </el-main>
         <!-- <el-footer>Footer</el-footer> -->
       </el-container>
@@ -133,6 +146,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import Pagehome from "./page";
 import { mapGetters } from "vuex";
+import screenfull from "screenfull";
 export default {
   name: "index",
   //import引入的组件需要注入到对象中才能使用
@@ -148,6 +162,7 @@ export default {
       defaultactive: "2-1",
       message: "Hello",
       onLine: navigator.onLine,
+      isFullscreen: false,
     };
   },
   //监听属性 类似于data概念
@@ -235,6 +250,27 @@ export default {
       });
       console.log(e);
     },
+    //全屏
+    click() {
+      if (!screenfull.isEnabled) {
+        this.$message({ message: "你的浏览器不支持全屏", type: "warning" });
+        return false;
+      }
+      screenfull.toggle();
+    },
+    change() {
+      this.isFullscreen = screenfull.isFullscreen;
+    },
+    init() {
+      if (screenfull.isEnabled) {
+        screenfull.on("change", this.change);
+      }
+    },
+    destroy() {
+      if (screenfull.isEnabled) {
+        screenfull.off("change", this.change);
+      }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -243,6 +279,7 @@ export default {
     window.addEventListener("online", this.updateOnlineStatus); // 网络由异常到正常时触发
 
     window.addEventListener("offline", this.updateOnlineStatus); // 网络由正常常到异常时触发
+    this.init();
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -251,6 +288,7 @@ export default {
   beforeDestroy() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
+    this.destroy();
   }, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
@@ -286,6 +324,7 @@ export default {
   // min-width: 65px;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
+  // transition: width .2s ;
   width: 200px;
   min-height: 400px;
 }
@@ -302,6 +341,20 @@ export default {
 .el-menu-vertical-demo {
   // height: 100%;
   border: 0;
+  //  width: 100%;
+  .el-menu-item.is-active {
+    // background: rgba(212, 211, 224, 0.2) !important;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .el-menu-item {
+    padding: 0 !important;
+    &:hover{
+      background: rgb(0, 21, 40) !important;
+    }
+  }
 }
 .headers {
   display: flex;
@@ -352,7 +405,7 @@ export default {
   -webkit-background-clip: text; /* 裁剪背景图，使文字作为裁剪区域向外裁剪 */
   -webkit-background-size: 200% 100%;
   -webkit-animation: masked-animation 4s linear infinite;
-  font-size: 35px;
+  // font-size: 35px;
 }
 
 @keyframes masked-animation {
@@ -381,5 +434,24 @@ export default {
   justify-content: center;
   width: 200px;
   display: none;
+}
+/* fade-transform */
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.img{
+      width: 40px;
+    height: 32px;
 }
 </style>

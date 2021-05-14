@@ -1,31 +1,30 @@
 <!--  -->
 <template>
   <div class="contentbox">
-    <div style="width: 100%">
       <div class="top">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          ref="formInline"
-          class="demo-form-inline"
-        >
-          <el-form-item label="序列号" prop="sn">
-            <el-input v-model="formInline.sn" placeholder="sn序列号"></el-input>
+        <el-form :model="formInline" ref="formInline" class="demo-form-inline">
+          <el-form-item label="序列号" prop="sn" label-width="100px">
+            <el-input
+              class="input"
+              v-model="formInline.sn"
+              placeholder="sn序列号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="订单id" prop="orderId">
+          <el-form-item label="订单id" prop="orderId" label-width="100px">
             <el-input
               v-model="formInline.orderId"
               placeholder="订单id"
+              class="input"
             ></el-input>
           </el-form-item>
-          <el-form-item label="设备id" prop="deviceid">
+          <el-form-item label="设备id" prop="deviceid" label-width="100px">
             <el-input
               v-model="formInline.deviceid"
               placeholder="设备id"
+              class="input"
             ></el-input>
           </el-form-item>
-
-          <el-form-item label="时间范围" prop="valuetime">
+          <el-form-item label="时间范围" prop="valuetime" label-width="100px">
             <el-date-picker
               v-model="formInline.valuetime"
               type="datetimerange"
@@ -36,16 +35,18 @@
               align="right"
               @change="btntime"
               value-format="yyyy-MM-dd HH:mm:ss"
+              style="width:313px"
             >
             </el-date-picker
           ></el-form-item>
-          <el-form-item>
+          <el-form-item label-width="100px">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="primary" @click="resetForm">重置</el-button>
           </el-form-item>
         </el-form>
         <!-- <el-tag type="info">默认显示最近24小时</el-tag> -->
       </div>
+    <div style="width: 100%">
       <div class="tablebox">
         <el-table
           ref="filterTable"
@@ -174,23 +175,31 @@
           </el-table-column>
         </el-table>
       </div>
-    </div>
     <div style="width: 100%">
       <div class="fonter">
-        <!-- layout="prev, pager, next" -->
-        <div class="fchild">
-          0次测试 <el-tag>{{ num0 }} </el-tag>
-        </div>
-        <div class="fchild">
-          一次测试 <el-tag>{{ num1 }} </el-tag>
-        </div>
-        <div class="fchild">
-          二次测试 <el-tag>{{ num2 }} </el-tag>
-        </div>
-        <div class="fchild">
-          三+次测试 <el-tag>{{ num3 }} </el-tag>
-        </div>
-        <el-pagination
+        <el-row :gutter="10">
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              0次测试 <el-tag>{{ num0 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+             一次测试 <el-tag>{{ num1 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              二次测试 <el-tag>{{ num2 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+               三次测试 <el-tag>{{ num3 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="24" :md="24" :lg="12">
+            <el-pagination
           layout="total, prev, pager, next, jumper"
           :total="total"
           :current-page="currentpage"
@@ -199,7 +208,10 @@
           background
         >
         </el-pagination>
+          </el-col>
+        </el-row>
       </div>
+    </div>
     </div>
     <el-dialog
       title="详情"
@@ -448,14 +460,18 @@ export default {
           const { code, data } = res.data;
           if (code == 200) {
             this.loading = false;
-            this.tableData = data.list;
-            this.total = data.totalRows;
-            this.currentpage = data.page;
-            this.pagesize = data.pagesize;
-
+            // this.tableData = data.list;
+            // this.total = data.totalRows;
+            // this.currentpage = data.page;
+            // this.pagesize = data.pagesize;
+            this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
             this.$nextTick(() => {
               this.$refs.filterTable.bodyWrapper.scrollTop = 0;
             });
+            this.$message.success(res.data.msg);
           } else {
             this.$message({
               message: res.data.msg,
@@ -465,11 +481,11 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
@@ -503,10 +519,10 @@ export default {
         })
         .catch((err) => {
           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+            message: err,
+            showClose: true,
+            type: "error",
+          });
         });
     },
     onSubmit() {
@@ -619,6 +635,7 @@ export default {
   align-items: center;
   margin: 0 0 10px 0;
   background: #fff;
+  width: 100%;
 
   >>> .el-form-item {
     margin-bottom: 0;
@@ -637,6 +654,10 @@ export default {
 }
 .demo-form-inline {
   padding: 24px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  width: 100%;
 }
 .tablebox {
   padding-left: 24px;
@@ -646,11 +667,11 @@ export default {
   // display: grid;
   // grid-template-columns: auto auto auto;
   // grid-template-rows: auto auto auto;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
 }
 .input {
-  width: 200px;
+  // width: 200px;
 }
 </style>

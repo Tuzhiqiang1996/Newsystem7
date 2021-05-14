@@ -42,6 +42,36 @@ public class TbDeviceListRe705Controller {
     @Resource
     private TbDeviceListRe705Mapper tbDeviceListRe705Mapper;
 
+    //    @GetMapping("devListku")
+//    public Result logiest(Integer currentPage) {
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//
+//        Date dNow = new Date();
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        String endtime = ft.format(dNow);
+//        String starttime = ft.format(new Date(dNow.getTime() - 1 * 24 * 60 * 60 * 1000));
+//        List<TbDeviceListRe705> data = tbDeviceListRe705Service.findAllbyPage(currentPage, pagerow);
+//        int TotalRows = tbDeviceListRe705Service.countAll();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//        return Result.succ("操作成功！", pageList);
+//    }
     @GetMapping("devListku")
     public Result logiest(Integer currentPage) {
         if (currentPage == null || currentPage < 1) {
@@ -49,29 +79,45 @@ public class TbDeviceListRe705Controller {
         }
 
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-
-        Date dNow = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String endtime = ft.format(dNow);
-        String starttime = ft.format(new Date(dNow.getTime() - 1 * 24 * 60 * 60 * 1000));
-        List<TbDeviceListRe705> data = tbDeviceListRe705Service.findAllbyPage(currentPage, pagerow);
-        int TotalRows = tbDeviceListRe705Service.countAll();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListRe705> queryWrapper = new EntityWrapper<>();
+        queryWrapper.orderBy("test_datetime",true);
+        iPage = tbDeviceListRe705Service.selectPage(iPage, queryWrapper);
+        if (iPage == null || iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
         }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-        return Result.succ("操作成功！", pageList);
+        return Result.succ("操作成功！", iPage);
     }
+
+//    @GetMapping("/searchlist")
+//    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
+//
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//        List<TbDeviceListRe705> data = tbDeviceListRe705Service.searchAllbyPage(pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+//        List<TbDeviceListRe705> datasize = tbDeviceListRe705Service.searchAllbyPagenum(deviceid, currentPage, orderId, starttime, endtime, sn);
+//
+//        int TotalRows = datasize.size();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//
+//
+//        return Result.succ("操作成功", pageList);
+//    }
 
     @GetMapping("/searchlist")
     public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
@@ -80,29 +126,28 @@ public class TbDeviceListRe705Controller {
             currentPage = 1;
         }
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-        List<TbDeviceListRe705> data = tbDeviceListRe705Service.searchAllbyPage(pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
-        List<TbDeviceListRe705> datasize = tbDeviceListRe705Service.searchAllbyPagenum(deviceid, currentPage, orderId, starttime, endtime, sn);
-
-        int TotalRows = datasize.size();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListRe705> queryWrapper = new EntityWrapper<>();
+        queryWrapper.orderBy("test_datetime",true);
+        if (deviceid != null && deviceid.length() != 0) {
+            queryWrapper.like("deviceid", deviceid);
         }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
+        if (orderId != null && orderId.length() != 0) {
+            queryWrapper.like("order_id", deviceid);
+        }
+        if (sn != null && sn.length() != 0) {
+            queryWrapper.like("sn", sn);
+        }
+        if (starttime != null && starttime.length() != 0) {
+            queryWrapper.between("test_datetime",  starttime, endtime);
+        }
+        iPage = tbDeviceListRe705Service.selectPage(iPage, queryWrapper);
+        if (iPage == null || iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
+        }
 
-        pageList.setRecords(data);
-
-
-        return Result.succ("操作成功", pageList);
+        return Result.succ("操作成功", iPage);
     }
-
     @GetMapping("/statistical6")
     public Result statisticalNum6(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
         String sql;
@@ -229,12 +274,12 @@ public class TbDeviceListRe705Controller {
         //降序排列
         queryWrapper.orderBy("id", true);
 //        iPage =tbDeviceListRe705Mapper.selectPage(iPage, queryWrapper);
-          iPage = tbDeviceListRe705Service.selectPage(iPage, queryWrapper);
+        iPage = tbDeviceListRe705Service.selectPage(iPage, queryWrapper);
         //1.获取记录总数
         int total = iPage.getTotal();
-        List<TbDeviceListRe705> lists=iPage.getRecords();
+        List<TbDeviceListRe705> lists = iPage.getRecords();
         System.out.println(total);
-         return Result.succ("", iPage);
+        return Result.succ("", iPage);
     }
 }
 

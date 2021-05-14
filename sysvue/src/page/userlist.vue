@@ -50,7 +50,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
               >编辑</el-button
@@ -79,7 +79,7 @@
     <el-dialog
       title="用户详情"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="50%"
       center
       destroy-on-close
     >
@@ -127,7 +127,7 @@
       </div>
 
       <el-dialog
-        width="30%"
+        width="50%"
         title="密码更换"
         :visible.sync="innerVisible"
         append-to-body
@@ -185,7 +185,7 @@
     <el-dialog
       title="用户注册"
       :visible.sync="dialogFormregina"
-      width="30%"
+      width="50%"
       center
       destroy-on-close
     >
@@ -396,6 +396,7 @@ export default {
             // this.total = res.data.data.total;
             // this.currentpage = res.data.data.current;
             // this.pagesize = res.data.data.size;
+              this.$message.success(res.data.msg)
           } else {
             this.$message({
               message: res.data.msg,

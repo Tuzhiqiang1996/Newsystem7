@@ -70,7 +70,7 @@
         </el-table-column>
         <el-table-column prop="atTable" show-overflow-tooltip label="表">
         </el-table-column>
-        <el-table-column fixed="right" label="操作" class-name="operation">
+        <el-table-column fixed="right" label="操作" class-name="operation"  width="100" >
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="editClick(scope.row)"
               >编辑</el-button
@@ -269,13 +269,18 @@ export default {
           if (code == 200) {
             console.log(data);
             this.loading = false;
-           this.tableData = data.list;
-            this.total = data.totalRows;
-            this.currentpage = data.page;
-            this.pagesize = data.pagesize;
+          //  this.tableData = data.list;
+          //   this.total = data.totalRows;
+          //   this.currentpage = data.page;
+          //   this.pagesize = data.pagesize;
+          this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
             // this.$nextTick(() => {
             //   this.$refs.filterTable.bodyWrapper.scrollTop = 0;
             // });
+            this.$message.success(res.data.msg)
           } else {
             this.$message({
               message: res.data.msg,
@@ -509,8 +514,8 @@ export default {
 }
 .formbox {
   display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto auto;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
 }
 .input {
   width: 200px;

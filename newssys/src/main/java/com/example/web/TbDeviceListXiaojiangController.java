@@ -3,6 +3,7 @@ package com.example.web;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.example.common.Page.PageList;
 import com.example.common.lang.Result;
 import com.example.entity.TbDeviceListXiaojiang;
@@ -42,30 +43,44 @@ public class TbDeviceListXiaojiangController {
     private TbDeviceListXiaojiangMapper tbDeviceListXiaojiangMapper;
     DateTime dt = DateTime.now();
 
+    //    @GetMapping("/xiaojlist")
+//    public Result xiaojlist(Integer currentPage) {
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//        List<TbDeviceListXiaojiang> data = xiaoJListService.findAllbyPage(currentPage, pagerow);
+//        int TotalRows = xiaoJListService.countAll();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//        return Result.succ("操作成功！", pageList);
+//    }
     @GetMapping("/xiaojlist")
-
     public Result xiaojlist(Integer currentPage) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-        List<TbDeviceListXiaojiang> data = xiaoJListService.findAllbyPage(currentPage, pagerow);
-        int TotalRows = xiaoJListService.countAll();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListXiaojiang> entityWrapper = new EntityWrapper<>();
+        entityWrapper.orderBy("test_datetime", true);
+        iPage = xiaoJListService.selectPage(iPage, entityWrapper);
+        if (iPage == null||iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
         }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-        return Result.succ("操作成功！", pageList);
+        return Result.succ("操作成功！", iPage);
     }
 
     /**
@@ -76,56 +91,57 @@ public class TbDeviceListXiaojiangController {
      * @date 2021/5/10 14:57
      * @message 数量查询
      */
-    @GetMapping("/xjtatistical6")
-    public Result statisticalNum6(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
-        String sql;
-        Long userList;
-        Integer d = 3;
-        if (num == null) {
-            return Result.fail("null");
-        }
-        if (num >= d) {
-            if (orderId != null && orderId.length() != 0) {
-                if (starttime != null && starttime.length() != 0) {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? AND order_id=? AND test_datetime BETWEEN ? AND ? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId, starttime, endtime));
-                } else {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? AND order_id=? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId));
-                }
+    /**
+     @GetMapping("/xjtatistical6") public Result statisticalNum6(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
+     String sql;
+     Long userList;
+     Integer d = 3;
+     if (num == null) {
+     return Result.fail("null");
+     }
+     if (num >= d) {
+     if (orderId != null && orderId.length() != 0) {
+     if (starttime != null && starttime.length() != 0) {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? AND order_id=? AND test_datetime BETWEEN ? AND ? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId, starttime, endtime));
+     } else {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? AND order_id=? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId));
+     }
 
-            } else {
-                if (starttime != null && starttime.length() != 0) {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=?  AND test_datetime BETWEEN ? AND ? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, starttime, endtime));
-                } else {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? ";
-                    userList = jdbcTemplate.queryForObject(sql, Long.class, num);
-                }
-            }
+     } else {
+     if (starttime != null && starttime.length() != 0) {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=?  AND test_datetime BETWEEN ? AND ? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, starttime, endtime));
+     } else {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count >=? ";
+     userList = jdbcTemplate.queryForObject(sql, Long.class, num);
+     }
+     }
 
-        } else {
-            if (orderId != null && orderId.length() != 0) {
-                if (starttime != null && starttime.length() != 0) {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND order_id=? AND test_datetime BETWEEN ? AND ? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId, starttime, endtime));
-                } else {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND order_id=? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId));
-                }
+     } else {
+     if (orderId != null && orderId.length() != 0) {
+     if (starttime != null && starttime.length() != 0) {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND order_id=? AND test_datetime BETWEEN ? AND ? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId, starttime, endtime));
+     } else {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND order_id=? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, orderId));
+     }
 
-            } else {
-                if (starttime != null && starttime.length() != 0) {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND test_datetime BETWEEN ? AND ? ";
-                    userList = (jdbcTemplate.queryForObject(sql, Long.class, num, starttime, endtime));
-                } else {
-                    sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? ";
-                    userList = jdbcTemplate.queryForObject(sql, Long.class, num);
-                }
-            }
-        }
-        return Result.succ("操作成功", userList);
-    }
+     } else {
+     if (starttime != null && starttime.length() != 0) {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? AND test_datetime BETWEEN ? AND ? ";
+     userList = (jdbcTemplate.queryForObject(sql, Long.class, num, starttime, endtime));
+     } else {
+     sql = "select COUNT(*) from tb_device_list_xiaojiang WHERE check_count =? ";
+     userList = jdbcTemplate.queryForObject(sql, Long.class, num);
+     }
+     }
+     }
+     return Result.succ("操作成功", userList);
+     }
+     */
 
     /**
      * [java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String]
@@ -133,13 +149,12 @@ public class TbDeviceListXiaojiangController {
      * @return com.example.common.lang.Result
      * @author Tu
      * @date 2021/5/11 12:25
-     * @message  与上诉方法相同
+     * @message 与上诉方法相同
      */
+
+
     @GetMapping("/xjtatistical")
     public Result statisticalNum(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
-        if (currentPage == null || currentPage < 1) {
-            currentPage = 1;
-        }
         EntityWrapper<TbDeviceListXiaojiang> entityWrapper = new EntityWrapper();
         if (orderId != null && orderId.length() != 0) {
             entityWrapper.eq("order_id", orderId);
@@ -169,36 +184,78 @@ public class TbDeviceListXiaojiangController {
      * @return com.example.common.lang.Result
      * @author Tu
      * @date 2021/5/10 16:05
-     * @message 分页
+     * @message 分页查询 旧方法
      */
+
+//    @GetMapping("/searchXjlist")
+//    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//        List<TbDeviceListXiaojiang> data = xiaoJListService.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+//        List<TbDeviceListXiaojiang> datasize = xiaoJListService.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+//
+//        int TotalRows = datasize.size();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//
+//
+//        return Result.succ("操作成功", pageList);
+//    }
+
+
+    /**
+     * [java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/5/13 16:35
+     * @message 分页  新
+     */
+
+
     @GetMapping("/searchXjlist")
     public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-        List<TbDeviceListXiaojiang> data = xiaoJListService.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
-        List<TbDeviceListXiaojiang> datasize = xiaoJListService.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListXiaojiang> queryWrapper = new EntityWrapper<>();
+        queryWrapper.orderBy("test_datetime", true);
 
-        int TotalRows = datasize.size();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        if (deviceid != null && deviceid.length() != 0) {
+            queryWrapper.like("deviceid", deviceid);
         }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-
-
-        return Result.succ("操作成功", pageList);
+        if (orderId != null && orderId.length() != 0) {
+            queryWrapper.like("order_id", orderId);
+        }
+        if (sn != null && sn.length() != 0) {
+            queryWrapper.like("sn", sn);
+        }
+        if (starttime != null && starttime.length() != 0) {
+            queryWrapper.between("test_datetime", starttime, endtime);
+        }
+        iPage = xiaoJListService.selectPage(iPage, queryWrapper);
+        if (iPage == null||iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
+        }
+        return Result.succ("操作成功", iPage);
     }
+
 
     @PostMapping("/listFix")
     public Result listFix(@Validated @RequestBody TbDeviceListXiaojiang xiaoJList) {
@@ -217,6 +274,7 @@ public class TbDeviceListXiaojiangController {
         xiaoJListService.insertOrUpdate(xiaoJList1);
         return Result.succ("修改成功！");
     }
+
     @PostMapping("/xjlist")
     public Result xjlist(@RequestBody List<TbDeviceListXiaojiang> xjlists) {
         if (xjlists.size() == 0 || xjlists == null) {

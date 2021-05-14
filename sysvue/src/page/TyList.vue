@@ -3,29 +3,23 @@
   <div class="" style="width: 100%">
     <div style="">
       <div class="top">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          ref="formInline"
-          class="demo-form-inline"
-        >
-        <el-form-item label="序列号" prop="sn">
+        <el-form :model="formInline" ref="formInline" class="demo-form-inline">
+          <el-form-item label="序列号" prop="sn" label-width="100px">
             <el-input v-model="formInline.sn" placeholder="sn序列号"></el-input>
           </el-form-item>
-          <el-form-item label="订单id" prop="orderId">
+          <el-form-item label="订单id" prop="orderId" label-width="100px">
             <el-input
               v-model="formInline.orderId"
               placeholder="订单id"
             ></el-input>
           </el-form-item>
-          <el-form-item label="设备id" prop="deviceid">
+          <el-form-item label="设备id" prop="deviceid" label-width="100px">
             <el-input
               v-model="formInline.deviceid"
               placeholder="设备id"
             ></el-input>
           </el-form-item>
-
-          <el-form-item label="时间范围" prop="valuetime">
+          <el-form-item label="时间范围" prop="valuetime" label-width="100px">
             <el-date-picker
               v-model="formInline.valuetime"
               type="datetimerange"
@@ -36,10 +30,11 @@
               align="right"
               @change="btntime"
               value-format="yyyy-MM-dd HH:mm:ss"
+              style="width:313px"
             >
             </el-date-picker
           ></el-form-item>
-          <el-form-item>
+          <el-form-item label-width="100px">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="primary" @click="resetForm">重置</el-button>
           </el-form-item>
@@ -80,16 +75,20 @@
                   scope.row.testResult == 1
                     ? 'success'
                     : scope.row.testResult == 0
-                    ? 'info':scope.row.testResult == -1?
-                     'danger':'warning'
+                    ? 'info'
+                    : scope.row.testResult == -1
+                    ? 'danger'
+                    : 'warning'
                 "
                 disable-transitions
                 >{{
                   scope.row.testResult == 1
                     ? "成功"
                     : scope.row.testResult == 0
-                    ? "未测试": scope.row.testResult == -1?
-                    "失败":"NULL"
+                    ? "未测试"
+                    : scope.row.testResult == -1
+                    ? "失败"
+                    : "NULL"
                 }}</el-tag
               >
             </template>
@@ -113,16 +112,20 @@
                   scope.row.packages == 1
                     ? 'success'
                     : scope.row.packages == 0
-                    ? 'info':scope.row.packages == -1?
-                     'danger':'warning'
+                    ? 'info'
+                    : scope.row.packages == -1
+                    ? 'danger'
+                    : 'warning'
                 "
                 disable-transitions
                 >{{
                   scope.row.packages == 1
                     ? "成功"
                     : scope.row.packages == 0
-                    ? "未测试": scope.row.packages == -1?
-                    "失败":"NULL"
+                    ? "未测试"
+                    : scope.row.packages == -1
+                    ? "失败"
+                    : "NULL"
                 }}</el-tag
               >
             </template>
@@ -168,28 +171,39 @@
     </div>
     <div>
       <div class="fonter">
-        <!-- layout="prev, pager, next" -->
-        <div class="fchild">
-          0次测试 <el-tag>{{ num0 }} </el-tag>
-        </div>
-        <div class="fchild">
-          一次测试 <el-tag>{{ num1 }} </el-tag>
-        </div>
-        <div class="fchild">
-          二次测试 <el-tag>{{ num2 }} </el-tag>
-        </div>
-        <div class="fchild">
-          三+次测试 <el-tag>{{ num3 }} </el-tag>
-        </div>
-        <el-pagination
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-          :current-page="currentpage"
-          :page-size="pagesize"
-          @current-change="page"
-          background
-        >
-        </el-pagination>
+        <el-row :gutter="10">
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              0次测试 <el-tag>{{ num0 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              一次测试 <el-tag>{{ num1 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              二次测试 <el-tag>{{ num2 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="12" :md="6" :lg="3">
+            <div class="fchild">
+              三次测试 <el-tag>{{ num3 }} </el-tag>
+            </div>
+          </el-col>
+          <el-col :sm="24" :md="24" :lg="12">
+            <el-pagination
+              layout="total, prev, pager, next, jumper"
+              :total="total"
+              :current-page="currentpage"
+              :page-size="pagesize"
+              @current-change="page"
+              background
+            >
+            </el-pagination>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -323,16 +337,20 @@ export default {
           const { code, data } = res.data;
           if (code == 200) {
             this.loading = false;
-           this.tableData = data.list;
-            this.total = data.totalRows;
-            this.currentpage = data.page;
-            this.pagesize = data.pagesize;
+            //  this.tableData = data.list;
+            //   this.total = data.totalRows;
+            //   this.currentpage = data.page;
+            //   this.pagesize = data.pagesize;
 
-
+            this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
 
             this.$nextTick(() => {
               this.$refs.filterTable.bodyWrapper.scrollTop = 0;
             });
+            this.$message.success(res.data.msg);
           } else {
             this.$message({
               message: res.data.msg,
@@ -342,11 +360,11 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
@@ -379,17 +397,17 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
     onSubmit() {
       this.page(1);
-      this.num()
+      this.num();
     },
     resetForm() {
       this.page(1);
@@ -419,7 +437,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.page(1);
-     this.num()
+    this.num();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -457,6 +475,10 @@ export default {
 }
 .demo-form-inline {
   padding: 24px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  width: 100%;
 }
 .tablebox {
   padding-left: 24px;

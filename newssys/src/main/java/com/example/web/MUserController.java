@@ -273,7 +273,7 @@ public class MUserController {
 
         pageList.setRecords(data);
 
-        return Result.succ("", pageList);
+        return Result.succ("获取成功！", pageList);
     }
 
     /**

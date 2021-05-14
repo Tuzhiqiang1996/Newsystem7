@@ -2,6 +2,7 @@ package com.example.web;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.example.common.Page.PageList;
 import com.example.common.lang.Result;
 import com.example.entity.TbDeviceListRe755;
@@ -39,30 +40,82 @@ public class TbDeviceListRe755Controller {
     @Resource
     private TbDeviceListRe755Mapper tbDeviceListRe755Mapper;
 
+//    @GetMapping("/TYlist")
+//    public Result xiaojlist(Integer currentPage) {
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//        List<TbDeviceListRe755> data = re755Service.findAllbyPage(currentPage, pagerow);
+//        int TotalRows = re755Service.countAll();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//        return Result.succ("操作成功！", pageList);
+//    }
+
+    /**
+     * [java.lang.Integer]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/5/13 16:45
+     * @message  更新上诉方法  加速查询
+     */
+
     @GetMapping("/TYlist")
     public Result xiaojlist(Integer currentPage) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-        List<TbDeviceListRe755> data = re755Service.findAllbyPage(currentPage, pagerow);
-        int TotalRows = re755Service.countAll();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListRe755> queryWrapper = new EntityWrapper<>();
+        queryWrapper.orderBy("test_datetime", true);
+        iPage = re755Service.selectPage(iPage, queryWrapper);
+        if (iPage == null||iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
         }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-        return Result.succ("操作成功！", pageList);
+        return Result.succ("操作成功！", iPage);
     }
+
+//    @GetMapping("/searchTYlist")
+//    public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
+//
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 100;
+//        PageList pageList = new PageList();
+//        List<TbDeviceListRe755> data = re755Service.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+//        List<TbDeviceListRe755> datasize = re755Service.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
+//
+//        int TotalRows = datasize.size();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//        return Result.succ("操作成功", pageList);
+//    }
 
     @GetMapping("/searchTYlist")
     public Result searchData(String deviceid, Integer currentPage, String orderId, String starttime, String endtime, String sn) {
@@ -71,26 +124,28 @@ public class TbDeviceListRe755Controller {
             currentPage = 1;
         }
         Integer pagerow = 100;
-        PageList pageList = new PageList();
-        List<TbDeviceListRe755> data = re755Service.searchAllbyPage(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
-        List<TbDeviceListRe755> datasize = re755Service.searchAllbyPagenum(currentPage, pagerow, deviceid, currentPage, orderId, starttime, endtime, sn);
-
-        int TotalRows = datasize.size();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbDeviceListRe755> queryWrapper = new EntityWrapper<>();
+        queryWrapper.orderBy("test_datetime", true);
+        if (deviceid != null && deviceid.length() != 0) {
+            queryWrapper.like("deviceid", deviceid);
         }
-        pageList.setPages(pages);
+        if (orderId != null && orderId.length() != 0) {
+            queryWrapper.like("order_id", orderId);
+        }
+        if (sn != null && sn.length() != 0) {
+            queryWrapper.like("sn", sn);
+        }
+        if (starttime != null && starttime.length() != 0) {
+            queryWrapper.between("test_datetime", starttime, endtime);
+        }
 
-        pageList.setRecords(data);
-        return Result.succ("操作成功", pageList);
+        iPage = re755Service.selectPage(iPage, queryWrapper);
+        if (iPage == null||iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
+        }
+        return Result.succ("操作成功", iPage);
     }
-
     @GetMapping("/tytatistical6")
     public Result statisticalNum6(Integer num, Integer currentPage, String orderId, String starttime, String endtime) {
         if (currentPage == null || currentPage < 1) {

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.example.common.Page.PageList;
 import com.example.common.lang.Result;
 import com.example.entity.TbDeviceListRe705;
+import com.example.entity.TbDeviceLog;
 import com.example.entity.TbOrder;
 import com.example.mapper.TbOrderMapper;
 import com.example.service.TbOrderService;
@@ -40,30 +41,46 @@ public class TbOrderController {
     @Resource
     private TbOrderMapper tbOrderMapper;
 
+//    @GetMapping("/order")
+//    public Result order(Integer currentPage) {
+//        if (currentPage == null || currentPage < 1) {
+//            currentPage = 1;
+//        }
+//        Integer pagerow = 8;
+//        PageList pageList = new PageList();
+//        List<TbOrder> data = orderService.findAllbyPage(currentPage, pagerow);
+//        int TotalRows = orderService.countAll();
+//        pageList.setPage(currentPage);
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+//        return Result.succ("获取成功", pageList);
+//    }
+
     @GetMapping("/order")
     public Result order(Integer currentPage) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Integer pagerow = 8;
-        PageList pageList = new PageList();
-        List<TbOrder> data = orderService.findAllbyPage(currentPage, pagerow);
-        int TotalRows = orderService.countAll();
-        pageList.setPage(currentPage);
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbOrder> entityWrapper = new EntityWrapper<>();
+        entityWrapper.orderBy("id", true);
+        iPage = orderService.selectPage(iPage, entityWrapper);
+
+        if (iPage == null||iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
         }
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-        return Result.succ("成功", pageList);
+        return Result.succ("获取成功", iPage);
     }
-
     @PostMapping("/orderadd")
     public Result orderadd(@RequestBody TbOrder orderList) {
 

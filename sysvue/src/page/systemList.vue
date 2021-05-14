@@ -1,9 +1,11 @@
-<!--  -->
+<!--设备列表  -->
 <template>
   <div class="">
     <div>
       <div class="add">
-        <el-button @click="handleClick"  style="    margin: 0 0 0 24px;" >新增</el-button>
+        <el-button @click="handleClick" style="margin: 0 0 0 24px"
+          >新增</el-button
+        >
       </div>
       <div class="tablebox">
         <el-table
@@ -80,96 +82,96 @@
     <el-dialog
       title="详情"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="50%"
       center
       destroy-on-close
     >
-      <el-form ref="formData" :model="formData">
-        <!-- <el-form-item label="id" label-width="100px">
+        <el-form ref="formData" :model="formData" class="formbox">
+          <!-- <el-form-item label="id" label-width="100px">
           <el-input v-model="formData.id" type="text" class="input" autocomplete="off" placeholder="请输入" ></el-input>
         </el-form-item> -->
-        <el-form-item label="acttimer" label-width="100px">
-          <el-input
-            v-model="formData.acttimer"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="cmd" label-width="100px">
-          <el-input
-            v-model="formData.cmd"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="display" label-width="100px">
-          <el-input
-            v-model="formData.display"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="end" label-width="100px">
-          <el-input
-            v-model="formData.end"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="failed" label-width="100px">
-          <el-input
-            v-model="formData.failed"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="filter" label-width="100px">
-          <el-input
-            v-model="formData.filter"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="flag" label-width="100px">
-          <el-input
-            v-model="formData.flag"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="function" label-width="100px">
-          <el-input
-            v-model="formData.function"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="pass" label-width="100px">
-          <el-input
-            v-model="formData.pass"
-            type="text"
-            class="input"
-            autocomplete="off"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-      </el-form>
+            <el-form-item label="acttimer" label-width="100px">
+              <el-input
+                v-model="formData.acttimer"
+                type="text"
+                class="input"
+                autocomplete="off"
+                placeholder="请输入"
+              ></el-input>
+            </el-form-item>
+          <el-form-item label="cmd" label-width="100px">
+            <el-input
+              v-model="formData.cmd"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="display" label-width="100px">
+            <el-input
+              v-model="formData.display"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="end" label-width="100px">
+            <el-input
+              v-model="formData.end"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="failed" label-width="100px">
+            <el-input
+              v-model="formData.failed"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="filter" label-width="100px">
+            <el-input
+              v-model="formData.filter"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="flag" label-width="100px">
+            <el-input
+              v-model="formData.flag"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="function" label-width="100px">
+            <el-input
+              v-model="formData.function"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="pass" label-width="100px">
+            <el-input
+              v-model="formData.pass"
+              type="text"
+              class="input"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item> </el-form
+      >
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="onSave">确 定</el-button>
@@ -369,11 +371,11 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
@@ -410,8 +412,16 @@ export default {
 .add {
   background: #fff;
   display: flex;
-    width: 100%;
-    height: 70px;
-    align-items: center;
+  width: 100%;
+  height: 70px;
+  align-items: center;
+}
+.formbox  {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+}
+.input {
+  width: 200px;
 }
 </style>

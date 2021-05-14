@@ -3,15 +3,15 @@
   <div class="">
     <div  >
       <div class="top">
-        <el-form :inline="true" :model="formInline"     ref="formInline" class="demo-form-inline">
-          <el-form-item label="设备id" prop="deviceid">
+        <el-form   :model="formInline"     ref="formInline" class="demo-form-inline">
+          <el-form-item label="设备id" prop="deviceid" label-width="100px">
             <el-input
               v-model="formInline.deviceid"
               placeholder="设备id"
               clearable
             ></el-input>
           </el-form-item>
-         <el-form-item label="时间范围" prop="valuetime">
+         <el-form-item label="时间范围" prop="valuetime" label-width="100px">
             <el-date-picker
               v-model="formInline.datatime"
               type="datetimerange"
@@ -22,10 +22,11 @@
               value-format="yyyy-MM-dd HH:mm:ss"
               @change="btntime"
               :picker-options="pickerOptions"
+              style="width:313px"
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label-width="100px">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button type="primary" @click="resetForm">重置</el-button>
           </el-form-item>
@@ -199,12 +200,21 @@ export default {
           if (code == 200) {
             console.log(data);
             this.loading = false;
-            this.tableData = data.list;
-            this.total = data.totalRows;
-            this.currentpage = data.page;
-            this.pagesize = data.pagesize;
+            // this.tableData = data.list;
+            // this.total = data.totalRows;
+            // this.currentpage = data.page;
+            // this.pagesize = data.pagesize;
+             this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
             this.$nextTick(() => {
               this.$refs.filterTable.bodyWrapper.scrollTop = 0;
+            });
+              this.$message({
+              message: res.data.msg,
+              showClose: true,
+              type: "success",
             });
           } else {
             this.$message({
@@ -266,6 +276,10 @@ export default {
 }
 .demo-form-inline {
   padding: 24px;
+   display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  width: 100%;
 }
 .tablebox{
   padding-left: 24px;
