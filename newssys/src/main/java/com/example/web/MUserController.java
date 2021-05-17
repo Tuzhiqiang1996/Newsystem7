@@ -7,7 +7,10 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.example.common.Page.PageList;
 import com.example.common.Page.PageParam;
 import com.example.common.Page.Pagination;
@@ -239,41 +242,54 @@ public class MUserController {
      * pagerow  每页的数量
      */
     @GetMapping("userList")
-    public Result getuserlist(Integer currentPage, Integer pagerow) {
+    public Result getuserlist(Integer currentPage) {
         if (currentPage == null || currentPage < 0) {
             currentPage = 1;
         }
-        if (pagerow == null || pagerow < 0) {
-            pagerow = 5;
+        Integer pagerow = 8;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<MUser> entityWrapper = new EntityWrapper<>();
+        iPage = mUserService.selectPage(iPage, entityWrapper);
+
+        if (iPage == null || iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
         }
-        PageList pageList = new PageList();
-        List<MUser> data = mUserService.findAllbyPage(currentPage, pagerow);
-        /**
-         * 置空 本想移除奈何实力不允许
-         * 毫秒数转换
-         */
-        for (int i = 0; i < data.size(); i++) {
-            data.get(i).setPassword("");
-//             data.get(i).setCreated((DateUtil.date(data.get(i).getCreated())));
 
+        JSONObject jsonObject = new JSONObject(iPage);//可以将json格式的字符串变成json对象
+        JSONArray jsonArray = (JSONArray) jsonObject.get("records");
+//        System.out.println(jsonArray);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonData = (JSONObject) jsonArray.get(i);//得到对象中的第i条记录
+            jsonData.remove("password");
+//            System.out.println("data[" + i + "]:" + jsonData.remove("password"));
         }
-        int TotalRows = mUserService.countAll();
-        pageList.setPage(currentPage);
-
-        pageList.setSize(pagerow);
-        pageList.setTotal(TotalRows);
-        int pages = 0;
-        if (TotalRows % pagerow == 0) {
-            pages = TotalRows / pagerow;
-        } else {
-            pages = TotalRows / pagerow + 1;
-        }
-//        System.out.println("目前分页的总页数是"+pages);
-        pageList.setPages(pages);
-
-        pageList.setRecords(data);
-
-        return Result.succ("获取成功！", pageList);
+//        PageList pageList = new PageList();
+//        List<MUser> data = mUserService.findAllbyPage(currentPage, pagerow);
+//        /**
+//         * 置空 本想移除奈何实力不允许
+//         * 毫秒数转换
+//         */
+//        for (int i = 0; i < data.size(); i++) {
+//            data.get(i).setPassword("");
+////             data.get(i).setCreated((DateUtil.date(data.get(i).getCreated())));
+//
+//        }
+//        int TotalRows = mUserService.countAll();
+//        pageList.setPage(currentPage);
+//
+//        pageList.setSize(pagerow);
+//        pageList.setTotal(TotalRows);
+//        int pages = 0;
+//        if (TotalRows % pagerow == 0) {
+//            pages = TotalRows / pagerow;
+//        } else {
+//            pages = TotalRows / pagerow + 1;
+//        }
+////        System.out.println("目前分页的总页数是"+pages);
+//        pageList.setPages(pages);
+//
+//        pageList.setRecords(data);
+        return Result.succ("获取成功！", jsonObject);
     }
 
     /**
@@ -296,8 +312,9 @@ public class MUserController {
 //        mUserService.removeById(userid);
         return Result.succ("删除成功", null);
     }
+
     @PostMapping("/user/edit")
-    public Result useredit(@Validated @RequestBody MUser  user) {
+    public Result useredit(@Validated @RequestBody MUser user) {
         //根据当前id获取用户信息
         MUser dd = mUserService.selectById(user.getId());
 
@@ -321,6 +338,7 @@ public class MUserController {
         jsonObject.remove("password");//过滤的值
         return Result.succ("修改成功！", jsonObject);
     }
+
     @PostMapping("/user/pass")
     public Result userpass(@RequestParam Integer id, @RequestParam String password, @RequestParam String newpassword) {
 //        System.out.println(id + "" + password + "" + newpassword);

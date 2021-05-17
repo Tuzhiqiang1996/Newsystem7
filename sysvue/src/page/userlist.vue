@@ -12,7 +12,7 @@
         ref="filterTable"
         :data="tableData"
         style="width: 100%"
-        height="403"
+        height="616"
       >
         <el-table-column label="头像">
           <template slot-scope="scope">
@@ -33,13 +33,6 @@
         </el-table-column>
         <el-table-column prop="status" label="权限">
           <template slot-scope="scope">
-            <!-- <el-rate
-              v-model="scope.row.status"
-              disabled
-              disabled-void-color="#f7ba2a"
-              :colors="['#ffffff', '#F7BA2A', '#FF9900']"
-            >
-            </el-rate> -->
             <el-tag size="medium">{{
               scope.row.status == 0
                 ? "超级管理员"
@@ -389,13 +382,10 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             this.loading = false;
-            this.tableData = res.data.data.list;
-            this.total = res.data.data.totalRows; //总
-            this.currentpage = res.data.data.page;
-            // this.tableData = res.data.data.records;
-            // this.total = res.data.data.total;
-            // this.currentpage = res.data.data.current;
-            // this.pagesize = res.data.data.size;
+            this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
               this.$message.success(res.data.msg)
           } else {
             this.$message({

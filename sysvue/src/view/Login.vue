@@ -154,17 +154,17 @@ export default {
   },
   created() {
     // console.log(Image);
-    	var _self = this;
-	document.onkeydown = function(e){
-		if(window.event == undefined){
-			var key = e.keyCode;
-		}else{
-			var key = window.event.keyCode;
-		}
-		if(key == 13){
-			_self.login('ruleForm');
-		}
-	}
+    var _self = this;
+    document.onkeydown = function (e) {
+      if (window.event == undefined) {
+        var key = e.keyCode;
+      } else {
+        var key = window.event.keyCode;
+      }
+      if (key == 13) {
+        _self.login("ruleForm");
+      }
+    };
   },
   mounted() {},
   watch: {
@@ -301,7 +301,7 @@ export default {
     position: absolute;
     height: 100%;
     width: 100%;
-    background: url("../assets/image/bg2.jpg");
+    background: url("../assets/image/bg2.jpg") !important;
   }
   #particles-js {
     position: absolute;
@@ -437,7 +437,7 @@ input:-ms-input-placeholder {
   margin: 50px 0 0 80px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 30px rgba(255 ,255, 255 , 0.5);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
   border-radius: 5px;
 }
 </style>

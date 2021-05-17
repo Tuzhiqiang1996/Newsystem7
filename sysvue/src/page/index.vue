@@ -1,17 +1,16 @@
 <!--  -->
 <template>
   <div class="box">
-    <!-- <router-link to="/HelloWorld">数据大屏</router-link> -->
     <el-container style="height: 100%">
       <el-aside width="" style="background: #304156">
         <div v-if="isCollapse" class="title">
-          <img src="../assets/logo.jpg" alt="" class="img" >
+          <img src="../assets/logo.jpg" alt="" class="img" />
         </div>
         <div v-else class="title">
-           <img src="../assets/logo.jpg" alt="" class="img"  >
-          <h1 >WTWD</h1>
+          <img src="../assets/logo.jpg" alt="" class="img" />
+          <h1>WTWD</h1>
         </div>
-          <!-- background-color="#00152a" -->
+        <!-- background-color="#00152a" -->
         <el-menu
           :default-active="defaultactive"
           class="el-menu-vertical-demo"
@@ -22,32 +21,13 @@
           text-color="#fff"
           @select="select"
         >
-          <!-- <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-s-grid"></i>
-              <span slot="title">设备列表</span>
-            </template>
-            <el-menu-item-group>
-              <span slot="title">分组一</span>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <span slot="title">选项4</span>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-          </el-submenu> -->
-          <el-menu-item index="1">
+          <Elmenu :collapse="isCollapse" />
+          <!-- 循环解决-->
+
+          <!-- <el-menu-item index="1">
             <i class="el-icon-menu"></i>
             <span slot="title">设备日志</span>
           </el-menu-item>
-          <!-- <el-menu-item index="2">
-            <i class="el-icon-s-grid"></i>
-            <span slot="title">设备列表</span>
-          </el-menu-item> -->
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-s-grid"></i>
@@ -56,7 +36,9 @@
             <el-menu-item-group>
               <el-menu-item index="2-1">小匠</el-menu-item>
               <el-menu-item index="2-2">酷宅</el-menu-item>
-              <el-menu-item index="2-3">大华</el-menu-item>
+              <el-menu-item index="2-3" style="display: none"
+                >大华</el-menu-item
+              >
               <el-menu-item index="2-4">涂鸦</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -79,7 +61,7 @@
           <el-menu-item index="6">
             <i class="el-icon-setting"></i>
             <span slot="title">工具辅助</span>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
         <div class="botinfo">123</div>
       </el-aside>
@@ -91,12 +73,15 @@
               @click="tarrget"
               class="btns"
             ></el-button>
+
             <div class="rightimg">
               <el-button
                 icon="el-icon-rank"
                 @click="click"
                 class="btns"
-              ></el-button>
+                size="25"
+              >
+              </el-button>
               <P
                 >欢迎：<i
                   class="el-icon-user-solid"
@@ -129,13 +114,16 @@
             </div>
           </div>
         </el-header>
-        <el-main>
-          <transition name="el-fade-in" mode="out-in">
+        <el-scrollbar style="height: 100%">
+          <el-main>
             <div class="pagecontent">
-              <Pagehome :defaultactive="defaultactive" /></div
-          ></transition>
-        </el-main>
-        <!-- <el-footer>Footer</el-footer> -->
+              <!-- <transition name="fade-transform" mode="out-in"> -->
+              <Pagehome :defaultactive="defaultactive" />
+              <!-- </transition> -->
+            </div>
+          </el-main>
+          <!-- <el-footer>Footer</el-footer> -->
+        </el-scrollbar>
       </el-container>
     </el-container>
   </div>
@@ -145,6 +133,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Pagehome from "./page";
+import Elmenu from "../pages/elmenu";
 import { mapGetters } from "vuex";
 import screenfull from "screenfull";
 export default {
@@ -152,6 +141,7 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     Pagehome,
+    Elmenu,
   },
   data() {
     //这里存放数据
@@ -160,19 +150,12 @@ export default {
       isbtn1: "el-icon-s-fold",
       isbtn2: "el-icon-s-unfold",
       defaultactive: "2-1",
-      message: "Hello",
       onLine: navigator.onLine,
       isFullscreen: false,
     };
   },
   //监听属性 类似于data概念
   computed: {
-    // 计算属性的 getter
-    reversedMessage: function () {
-      // `this` 指向 vm 实例
-      return this.message.split("").reverse().join("");
-    },
-
     ...mapGetters(["getUser"]),
   },
   //监控data中的数据变化
@@ -196,7 +179,7 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
     select(key, keyPath) {
-      // console.log(key, keyPath);
+      console.log(key, keyPath);
       this.defaultactive = key;
       // sessionStorage.setItem("active",key)
     },
@@ -300,6 +283,12 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+  .el-scrollbar__view {
+    height: 100%;
+  }
 }
 .btns {
   font-size: 30px;
@@ -337,6 +326,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 .el-menu-vertical-demo {
   // height: 100%;
@@ -351,7 +343,7 @@ export default {
   }
   .el-menu-item {
     padding: 0 !important;
-    &:hover{
+    &:hover {
       background: rgb(0, 21, 40) !important;
     }
   }
@@ -450,8 +442,8 @@ export default {
   opacity: 0;
   transform: translateX(30px);
 }
-.img{
-      width: 40px;
-    height: 32px;
+.img {
+  width: 40px;
+  height: 32px;
 }
 </style>

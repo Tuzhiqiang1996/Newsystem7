@@ -714,11 +714,11 @@ export default {
             type: "success",
           });
         } else {
-           this.$message({
-              message: "error",
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: "error",
+            showClose: true,
+            type: "error",
+          });
           console.log("error submit!!");
           return false;
         }
@@ -744,11 +744,19 @@ export default {
     changeradio() {
       // console.log('',this.radio); deviceid
       if (this.activeName != 3) {
-        this.$message({
-          message: "已选择云端插入位置：deviceid",
-          showClose: true,
-          type: "success",
-        });
+        if (this.radio == 1) {
+          this.$message({
+            message: "已选择云端插入位置：deviceid",
+            showClose: true,
+            type: "success",
+          });
+        } else {
+          this.$message({
+            message: "已选择云端插入位置：sn",
+            showClose: true,
+            type: "success",
+          });
+        }
       }
     },
   },

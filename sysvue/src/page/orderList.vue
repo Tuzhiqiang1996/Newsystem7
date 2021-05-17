@@ -1,17 +1,45 @@
 <!-- 设备订单 -->
 <template >
-  <div class=" ">
-    <div class="add">
+  <div class="">
+    <div class="top">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        ref="formInline"
+        class="demo-form-inline"
+      >
+        <el-form-item label="订单号" prop="orderNumber" label-width="100px">
+          <el-input
+            v-model="formInline.orderNumber"
+            placeholder="订单号"
+            class="input"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="项目" prop="projectName" label-width="100px">
+          <el-input
+            v-model="formInline.projectName"
+            placeholder="项目"
+            class="input"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label-width="100px">
+          <el-button type="primary" @click="querylist">查询</el-button>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="handleClick">新增</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- <div class="add">
       <el-button @click="handleClick()" style="margin: 0 0 0 24px"
         >新增</el-button
       >
-    </div>
-    <div class="tablebox">
+    </div> -->
+    <div class="ordertable">
       <el-table
         ref="filterTable"
         style="width: 100%"
         :data="tableData"
-        height="506"
+        height="618"
         v-loading="loading"
       >
         <el-table-column
@@ -70,7 +98,12 @@
         </el-table-column>
         <el-table-column prop="atTable" show-overflow-tooltip label="表">
         </el-table-column>
-        <el-table-column fixed="right" label="操作" class-name="operation"  width="100" >
+        <el-table-column
+          fixed="right"
+          label="操作"
+          class-name="operation"
+          width="100"
+        >
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="editClick(scope.row)"
               >编辑</el-button
@@ -83,13 +116,13 @@
                 >删除
               </el-button>
             </el-popconfirm> -->
-             <el-button type="text" size="small" @click="addclick(scope.row)"
-              >新增</el-button></template>
+            <el-button type="text" size="small" @click="addclick(scope.row)"
+              >新增</el-button
+            ></template
+          >
         </el-table-column>
       </el-table>
     </div>
-
-    <div>
       <div class="fonter">
         <el-pagination
           layout="prev, pager, next"
@@ -101,7 +134,7 @@
         >
         </el-pagination>
       </div>
-    </div>
+
     <el-dialog
       title="详情"
       :visible.sync="dialogFormVisible"
@@ -109,7 +142,7 @@
       center
     >
       <el-form ref="formData" :model="formData" class="formbox">
-        <el-form-item label="订单号" label-width="100px"  >
+        <el-form-item label="订单号" label-width="100px">
           <el-input
             v-model="formData.orderNumber"
             type="text"
@@ -252,6 +285,10 @@ export default {
         userSwVersion: "",
       },
       selectid: "",
+      formInline: {
+        orderNumber: "",
+        projectName: "",
+      },
     };
   },
   //监听属性 类似于data概念
@@ -261,26 +298,32 @@ export default {
   //方法集合
   methods: {
     page(num) {
-      let url = "/order?currentPage=";
+      let url = `/order?currentPage=${num}`;
+      let url1 = `/queryorderlist?currentPage=${num}&projectName=${this.formInline.projectName}&orderNumber=${this.formInline.orderNumber}`;
+      let urls =
+        this.formInline.projectName == "" && this.formInline.orderNumber == ""
+          ? url
+          : url1;
       this.$axios
-        .get(url + num)
+        .get(urls)
         .then((res) => {
           const { code, data } = res.data;
           if (code == 200) {
             console.log(data);
             this.loading = false;
-          //  this.tableData = data.list;
-          //   this.total = data.totalRows;
-          //   this.currentpage = data.page;
-          //   this.pagesize = data.pagesize;
-          this.tableData = res.data.data.records;
+            //  this.tableData = data.list;
+            //   this.total = data.totalRows;
+            //   this.currentpage = data.page;
+            //   this.pagesize = data.pagesize;
+            this.tableData = res.data.data.records;
             this.total = res.data.data.total;
             this.currentpage = res.data.data.current;
             this.pagesize = res.data.data.size;
-            // this.$nextTick(() => {
-            //   this.$refs.filterTable.bodyWrapper.scrollTop = 0;
-            // });
-            this.$message.success(res.data.msg)
+            this.$nextTick(() => {
+              this.$refs.filterTable.bodyWrapper.scrollTop = 0;
+            });
+
+            this.$message.success(res.data.msg);
           } else {
             this.$message({
               message: res.data.msg,
@@ -290,11 +333,11 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
@@ -309,7 +352,7 @@ export default {
     addclick(row) {
       this.selectid = 1;
       this.dialogFormVisible = true;
-      this.formData=row
+      this.formData = row;
 
       // this.formData.atTable = row.atTable;
       // this.formData.bak = row.bak;
@@ -326,7 +369,7 @@ export default {
     //编辑 2
     editClick(row) {
       this.dialogFormVisible = true;
- this.formData=row
+      this.formData = row;
       // this.formData.atTable = row.atTable;
       // this.formData.bak = row.bak;
       // this.formData.cloudPlatform = row.cloudPlatform;
@@ -385,15 +428,15 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
-/**
+    /**
  * , {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -429,11 +472,11 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
     },
@@ -460,13 +503,20 @@ export default {
           }
         })
         .catch((err) => {
-           this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
-            });
+          this.$message({
+            message: err,
+            showClose: true,
+            type: "error",
+          });
           console.error(err);
         });
+    },
+    querylist() {
+      this.page(1);
+    },
+    resetForm() {
+      this.page(1);
+      this.$refs.formInline.resetFields();
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -487,13 +537,7 @@ export default {
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
 
-.contentbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-.tablebox {
+.ordertable {
   padding-left: 24px;
   background: #fff;
 }
@@ -516,8 +560,26 @@ export default {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  align-items: end;
 }
 .input {
   width: 200px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  margin: 0 0 10px 0;
+  background: #fff;
+  width: 100%;
+  >>> .el-form-item {
+    margin-bottom: 0;
+  }
+}
+.demo-form-inline {
+  padding: 24px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  width: 100%;
 }
 </style>

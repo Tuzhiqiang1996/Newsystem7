@@ -77,7 +77,7 @@ public class TbDeviceListXiaojiangController {
         EntityWrapper<TbDeviceListXiaojiang> entityWrapper = new EntityWrapper<>();
         entityWrapper.orderBy("test_datetime", true);
         iPage = xiaoJListService.selectPage(iPage, entityWrapper);
-        if (iPage == null||iPage.getTotal() == 0) {
+        if (iPage == null || iPage.getTotal() == 0) {
             return Result.fail("没有数据！");
         }
         return Result.succ("操作成功！", iPage);
@@ -250,7 +250,7 @@ public class TbDeviceListXiaojiangController {
             queryWrapper.between("test_datetime", starttime, endtime);
         }
         iPage = xiaoJListService.selectPage(iPage, queryWrapper);
-        if (iPage == null||iPage.getTotal() == 0) {
+        if (iPage == null || iPage.getTotal() == 0) {
             return Result.fail("没有数据！");
         }
         return Result.succ("操作成功", iPage);
@@ -282,16 +282,7 @@ public class TbDeviceListXiaojiangController {
         }
         TbDeviceListXiaojiang savefile = new TbDeviceListXiaojiang();
         List<TbDeviceListXiaojiang> savefileList = new ArrayList<>(xjlists);
-        /**
-         * 第一种时间长
-         * 1000/1min
-         * 1000每次
-         */
 
-//        for (int i = 0; i < savefileList.size(); i++) {
-//            BeanUtil.copyProperties((xjlists.get(i)), savefile);
-//            xiaoJListService.saveOrUpdate(savefile);
-//        }
         /**
          * 第二种时间明显减少
          * 1000/78ms

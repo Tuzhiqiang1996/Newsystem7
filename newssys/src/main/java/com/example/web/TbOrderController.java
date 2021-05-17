@@ -29,6 +29,7 @@ import java.util.List;
  *
  * @author Tu
  * @since 2021-05-07
+ * 设备订单
  */
 @Data
 @RestController
@@ -70,17 +71,18 @@ public class TbOrderController {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
-        Integer pagerow = 8;
+        Integer pagerow = 10;
         Page iPage = new Page<>(currentPage, pagerow);
         EntityWrapper<TbOrder> entityWrapper = new EntityWrapper<>();
         entityWrapper.orderBy("id", true);
         iPage = orderService.selectPage(iPage, entityWrapper);
 
-        if (iPage == null||iPage.getTotal() == 0) {
+        if (iPage == null || iPage.getTotal() == 0) {
             return Result.fail("没有数据！");
         }
         return Result.succ("获取成功", iPage);
     }
+
     @PostMapping("/orderadd")
     public Result orderadd(@RequestBody TbOrder orderList) {
 
@@ -127,15 +129,16 @@ public class TbOrderController {
     @GetMapping("getlistnumber")
     public Result getlistnumber(String orderNumber) {
 
-        EntityWrapper<TbOrder>  entityWrapper = new EntityWrapper();
+        EntityWrapper<TbOrder> entityWrapper = new EntityWrapper();
         entityWrapper.like("order_number", orderNumber);
-        List<TbOrder> userList = tbOrderMapper.selectPage(new Page<TbOrder>(1,1), entityWrapper);
+        List<TbOrder> userList = tbOrderMapper.selectPage(new Page<TbOrder>(1, 1), entityWrapper);
         //判断数据是否为空
         if (userList == null || userList.size() == 0) {
             return Result.fail("没有数据！");
         }
         return Result.succ("查询成功！", userList);
     }
+
     @PostMapping("/saveorderfile")
     public Result saveorder(@RequestBody TbOrder setfile) {
         TbOrder s = new TbOrder();
@@ -143,6 +146,7 @@ public class TbOrderController {
         orderService.insertOrUpdate(s);
         return Result.succ("插入数据成功！", s);
     }
+
     /**
      * [java.lang.Integer]
      *
@@ -153,5 +157,26 @@ public class TbOrderController {
      * qQueryWrapper 1.8
      */
 
+
+    @GetMapping("/queryorderlist")
+    public Result queryorderlist(String projectName, String orderNumber, Integer currentPage) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
+        }
+        Integer pagerow = 10;
+        Page iPage = new Page<>(currentPage, pagerow);
+        EntityWrapper<TbOrder> entityWrapper = new EntityWrapper<>();
+        if (projectName != null && projectName.length() != 0) {
+            entityWrapper.like("project_name", projectName);
+        }
+        if (orderNumber != null && orderNumber.length() != 0) {
+            entityWrapper.like("order_number", orderNumber);
+        }
+        iPage = orderService.selectPage(iPage, entityWrapper);
+        if (iPage == null || iPage.getTotal() == 0) {
+            return Result.fail("没有数据！");
+        }
+        return Result.succ("操作成功", iPage);
+    }
 }
 

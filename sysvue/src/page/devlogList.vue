@@ -22,7 +22,7 @@
               value-format="yyyy-MM-dd HH:mm:ss"
               @change="btntime"
               :picker-options="pickerOptions"
-              style="width:313px"
+              style="width:100%"
             >
             </el-date-picker>
           </el-form-item>

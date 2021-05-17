@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="contentbox">
-    <div v-if="defaultactive == '1'" ><DevlogList /></div>
+    <div v-if="defaultactive == '1'"><DevlogList /></div>
     <!-- <div v-else-if="defaultactive == '2-1'"><Syslist :listid="listid" /></div> -->
     <!--小匠 X-->
     <!-- <div v-else-if="defaultactive == '2-2'"><Syslist :listid="listid" /></div> -->
@@ -12,7 +12,7 @@
     <!--涂鸦 T-->
     <div v-else-if="defaultactive == '2-1'"><XiaoJlist /></div>
     <div v-else-if="defaultactive == '2-2'"><DevList /></div>
-    <div v-else-if="defaultactive == '2-3'"><Syslist listid="D" /></div>
+    <div v-else-if="defaultactive == '2-3'"><DahuaList listid="D" /></div>
     <div v-else-if="defaultactive == '2-4'"><TyList /></div>
     <div v-else-if="defaultactive == '3'"><SystemList /></div>
     <div v-else-if="defaultactive == '4'"><OrderList /></div>
@@ -32,7 +32,7 @@ import DevList from "./devList";
 import DevlogList from "./devlogList";
 import XiaoJlist from "./XiaoJlist";
 import TyList from "./TyList";
-import Syslist from "./dahuaList";
+import DahuaList from "./dahuaList";
 import Utilpage from "../utilpage";
 import Dataentry from "./dataentry";
 export default {
@@ -48,7 +48,7 @@ export default {
     DevlogList,
     XiaoJlist,
     TyList,
-    Syslist,
+    DahuaList,
     Utilpage,
     Dataentry,
   },
@@ -84,7 +84,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  div{
+  div {
     width: 100%;
   }
 }

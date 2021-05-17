@@ -30,7 +30,7 @@
               align="right"
               @change="btntime"
               value-format="yyyy-MM-dd HH:mm:ss"
-              style="width:313px"
+             style="width:100%"
             >
             </el-date-picker
           ></el-form-item>
@@ -171,7 +171,7 @@
     </div>
     <div>
       <div class="fonter">
-        <el-row :gutter="10">
+        <el-row :gutter="10" style="width: 100%">
           <el-col :sm="12" :md="6" :lg="3">
             <div class="fchild">
               0次测试 <el-tag>{{ num0 }} </el-tag>

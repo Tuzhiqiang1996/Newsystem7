@@ -35,7 +35,7 @@
               align="right"
               @change="btntime"
               value-format="yyyy-MM-dd HH:mm:ss"
-              style="width:313px"
+              style="width:100%"
             >
             </el-date-picker
           ></el-form-item>
@@ -177,7 +177,7 @@
       </div>
     <div style="width: 100%">
       <div class="fonter">
-        <el-row :gutter="10">
+        <el-row :gutter="10" style="width: 100%">
           <el-col :sm="12" :md="6" :lg="3">
             <div class="fchild">
               0次测试 <el-tag>{{ num0 }} </el-tag>
@@ -214,7 +214,7 @@
     </div>
     </div>
     <el-dialog
-      title="详情"
+      title="修改"
       :visible.sync="dialogFormVisible"
       width="50%"
       center

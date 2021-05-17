@@ -6,6 +6,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -33,6 +34,7 @@ public class MUser extends Model<MUser> {
     private String username;
     private String avatar;
     private String email;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     /**
      * 用户权限
